@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSys Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-hospital run-icon"></i>
+                <h2>MedSys<span>Portal</span></h2>
+                <button class="close-sidebar" id="closeSidebar"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active" data-target="dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-target="registration">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Registration</span>
+                </li>
+                <li class="nav-item" data-target="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Search Patient</span>
+                </li>
+                <li class="nav-item" data-target="queue">
+                    <i class="fa-solid fa-users-line"></i>
+                    <span>Daily Queue</span>
+                </li>
+                <li class="nav-item" data-target="analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" placeholder="Quick search..." id="globalSearch">
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+                        <i class="fa-regular fa-moon"></i>
+                    </button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Dr+Smith&background=0D8ABC&color=fff" alt="User Avatar">
+                        <div class="user-info">
+                            <span class="user-name">Dr. Smith</span>
+                            <span class="user-role">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="page-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card fade-in">
+                            <div class="stat-icon" style="background: rgba(13, 138, 188, 0.1); color: #0D8ABC;">
+                                <i class="fa-solid fa-hospital-user"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Total Patients</h3>
+                                <p id="totalPatientsStat">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fade-in" style="animation-delay: 0.1s">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Patients in Queue</h3>
+                                <p id="queueLengthStat">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fade-in" style="animation-delay: 0.2s">
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Today's Visits</h3>
+                                <p id="todayVisitsStat">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions fade-in" style="animation-delay: 0.3s">
+                        <h2>Quick Actions</h2>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="navigateTo('registration')">
+                                <i class="fa-solid fa-plus"></i> Register New Patient
+                            </button>
+                            <button class="btn btn-secondary" onclick="navigateTo('search')">
+                                <i class="fa-solid fa-search"></i> Search Patient
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity card fade-in" style="animation-delay: 0.4s">
+                        <h2>Recent Registrations</h2>
+                        <div class="table-responsive">
+                            <table class="table" id="recentPatientsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Registration Section -->
+                <section id="registration" class="page-section">
+                    <div class="card form-card">
+                        <h2>Patient Registration</h2>
+                        <form id="registrationForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="regPatientId">Patient ID *</label>
+                                    <input type="text" id="regPatientId" required readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regName">Full Name *</label>
+                                    <input type="text" id="regName" required placeholder="John Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="regAge">Age *</label>
+                                    <input type="number" id="regAge" required placeholder="30" min="0" max="150">
+                                </div>
+                                <div class="form-group">
+                                    <label for="regBloodGroup">Blood Group</label>
+                                    <select id="regBloodGroup">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="regAllergies">Allergies</label>
+                                    <input type="text" id="regAllergies" placeholder="E.g., Penicillin, Peanuts (Leave blank if none)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="regContact">Contact Number *</label>
+                                    <input type="tel" id="regContact" required placeholder="+1 234 567 8900">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="regAddress">Address</label>
+                                    <textarea id="regAddress" rows="3" placeholder="123 Medical St..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Register Patient</button>
+                                <button type="reset" class="btn btn-outline"><i class="fa-solid fa-rotate-left"></i> Clear Form</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Search Section -->
+                <section id="search" class="page-section">
+                    <div class="card">
+                        <div class="search-container">
+                            <input type="text" id="searchInput" placeholder="Search by exact Patient ID or partial Name...">
+                            <button id="searchBtn" class="btn btn-primary"><i class="fa-solid fa-search"></i> Search</button>
+                        </div>
+                    </div>
+                    
+                    <div id="searchResults" class="search-results mt-4" style="display: none;">
+                        <!-- Patient Profile Card -->
+                        <div class="profile-card card fade-in">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <i class="fa-solid fa-user-large"></i>
+                                </div>
+                                <div class="profile-info-header">
+                                    <h2 id="spName">John Doe</h2>
+                                    <span class="badge badge-primary" id="spId">PT-1001</span>
+                                </div>
+                                <button id="addToQueueBtn" class="btn btn-success ml-auto">
+                                    <i class="fa-solid fa-plus"></i> Add to Queue
+                                </button>
+                            </div>
+                            <div class="profile-details grid-3">
+                                <div class="detail-item">
+                                    <span class="label">Age</span>
+                                    <span class="value" id="spAge">35</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Blood Group</span>
+                                    <span class="value" id="spBlood">A+</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Contact</span>
+                                    <span class="value" id="spContact">+1 234 567 890</span>
+                                </div>
+                                <div class="detail-item col-span-3">
+                                    <span class="label">Allergies</span>
+                                    <span class="value" id="spAllergies">None</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visit History -->
+                        <div class="card mt-4 fade-in">
+                            <div class="flex-between">
+                                <h3>Visit History</h3>
+                                <button class="btn btn-outline btn-sm"><i class="fa-solid fa-notes-medical"></i> Add Note</button>
+                            </div>
+                            <ul class="timeline mt-4" id="visitTimeline">
+                                <!-- Populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Queue Section -->
+                <section id="queue" class="page-section">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <h2>Current Queue</h2>
+                            <span class="badge badge-warning">Waiting: <span id="queueCountLabel">0</span></span>
+                        </div>
+                        <div class="queue-list" id="queueList">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analytics" class="page-section">
+                    <div class="charts-grid">
+                        <div class="card chart-card">
+                            <h3>Daily Visits (Past 7 Days)</h3>
+                            <div class="chart-container">
+                                <canvas id="visitsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card chart-card">
+                            <h3>Patients by Department</h3>
+                            <div class="chart-container" style="height: 300px; display: flex; justify-content: center;">
+                                <canvas id="departmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
